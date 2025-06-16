@@ -1,34 +1,65 @@
-import type { Task } from "../tasks/models/task.model"
+// src/features/tasks/services/task.services.ts
+import type { Task } from '../tasks/models/task.model'
 
-export const getMockTasks = async (): Promise<Task[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        {
-          id: 1,
-          title: 'Corriger les bugs',
-          description: 'Corriger tous les bugs critiques avant déploiement',
-          priority: 'haute',
-          status: 'en cours',
-          assignedTo: 'Alice Dupont',
-        },
-        {
-          id: 2,
-          title: 'Créer la documentation',
-          description: 'Écrire les docs pour le backend',
-          priority: 'moyenne',
-          status: 'à faire',
-          assignedTo: 'Jean Martin',
-        },
-        {
-          id: 3,
-          title: 'Revue UX',
-          description: 'Analyser les retours utilisateurs',
-          priority: 'basse',
-          status: 'terminée',
-          assignedTo: 'Sophie Bernard',
-        },
-      ])
-    }, 500)
-  })
+const API = '/api'; // 👈 hardcodé pour tester Mirage
+const URL = `${API}/tasks`
+
+async function toJSON<R>(p: Promise<Response>): Promise<R> {
+  const res = await p
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: res.statusText }))
+    throw err
+  }
+
+  const text = await res.text() // ✅ lire UNE SEULE FOIS
+  console.log('[RAW RESPONSE]', text)
+
+  if (!text) return {} as R
+
+  try {
+    return JSON.parse(text)
+  } catch (e) {
+    console.error('Erreur de parsing JSON:', e)
+    throw { error: 'Réponse JSON invalide' }
+  }
+  
 }
+
+
+
+/* ─────────── CRUD ─────────── */
+
+export const fetchTasks = async (): Promise<Task[]> => {
+  const data = await toJSON<{ tasks: Task[] }>(fetch(URL));
+  return data.tasks;
+}
+
+
+export const createTask = (t: Omit<Task, 'id'>) =>
+  toJSON<{ task: Task }>(
+    fetch(URL, {
+      method : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body   : JSON.stringify(t),
+    })
+  ).then((res) => res.task) // ✅ corrige le bug
+
+
+/* ➜ signature correcte : id + patch (partiel, sans id) */
+export const updateTask = (
+  id   : number | string,
+  patch: Partial<Omit<Task, 'id'>>
+) =>
+  toJSON<{ task: Task }>(
+    fetch(`${URL}/${id}`, {
+      method : 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body   : JSON.stringify(patch),
+    })
+  ).then((res) => res.task)
+
+
+/* DELETE renvoie souvent 204 (pas de body) - on ne parse pas */
+export const deleteTask = (id: number | string) =>
+  fetch(`${URL}/${id}`, { method: 'DELETE' })
