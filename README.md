@@ -4,6 +4,10 @@
 
 ---
 
+## 🎥 Aperçu
+
+![Demo TaskMaster](./public/demo-TaskMasterPro.png)
+
 ## 🚀 Fonctionnalités
 
 * 📝 Création, modification, suppression de tâches
