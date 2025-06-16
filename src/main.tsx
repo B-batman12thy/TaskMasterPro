@@ -5,6 +5,7 @@ import './index.css'
 
 import { ThemeProvider } from './context/ThemeContext'
 import { TaskProvider } from './features/tasks/store'
+import { DynamicThemeProvider } from './themes/DynamicThemeProvider'
 
 if (
   import.meta.env.DEV &&
@@ -23,9 +24,11 @@ function startApp() {
   createRoot(document.getElementById('root')!).render(
     
       <ThemeProvider>
+         <DynamicThemeProvider>
         <TaskProvider>
           <App />
         </TaskProvider>
+        </DynamicThemeProvider>
       </ThemeProvider>
     
   )
