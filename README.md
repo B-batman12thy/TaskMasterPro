@@ -1,54 +1,187 @@
-# TASKMASTER-PRO
+# 💡 TaskMaster Pro
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**TaskMaster Pro** est une application web de gestion collaborative de tâches. Elle est conçue pour démontrer une architecture frontend avancée avec prise en charge de la thématisation dynamique, d’un backend fictif, et d’un pipeline CI/CD.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Fonctionnalités
 
-## Expanding the ESLint configuration
+* 📝 Création, modification, suppression de tâches
+* 🧑‍🤝🧑 Assignation de tâches à des utilisateurs fictifs
+* 📂 Filtrage des tâches par **priorité** (haute, moyenne, basse) et **statut** (à faire, en cours, terminé)
+* 🎨 Système de **switch dynamique entre Material UI et ShadCN**
+* 📦 Fake backend avec **MirageJS**
+* 💪 Docker ready
+* ⚙️ CI/CD avec GitHub Actions
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 💪 Stack technique
+
+* React + Vite
+* MirageJS
+* Context API (TaskStore, ThemeProvider)
+* Material UI + ShadCN (thème switchable)
+* TypeScript
+* Docker
+* GitHub Actions
+
+---
+
+## ⚙️ Structure du projet
+
+```
+src/
+├── App.tsx
+├── context/
+│   ├── ThemeContext.tsx
+│   └── useTheme.ts
+├── features/
+│   └── tasks/
+│       ├── components/
+│       │   ├── AddTaskForm.tsx
+│       │   ├── TaskCard.tsx
+│       │   └── TaskFilters.tsx
+│       ├── store/
+│       └── useTask.ts
+├── mirage/
+│   ├── server.ts
+│   └── handlers.ts
+├── services/
+│   └── task.services.ts
+├── ui/
+│   └── Button.tsx
+└── main.tsx
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## ▶️ Lancer l'application en local
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+### 1. Cloner le projet
+
+```bash
+git clone https://github.com/votre-utilisateur/taskmaster-pro.git
+cd taskmaster-pro
 ```
+
+### 2. Installer les dépendances
+
+```bash
+yarn install
+```
+
+### 3. Lancer le projet
+
+```bash
+yarn dev
+```
+
+🟢 L'application est accessible sur `http://localhost:5173`
+
+> Le **backend fictif** via MirageJS est automatiquement activé en environnement `development`
+> (`VITE_USE_REAL_API=false` par défaut)
+
+---
+
+## 🎨 Changer de thème (Material ↔ ShadCN)
+
+Un bouton dans la barre supérieure permet de basculer dynamiquement entre :
+
+* `Material UI` (composants MUI)
+* `ShadCN` (composants Tailwind)
+
+Le composant `Button`, `Input`, `Card` et tous les éléments respectent ce thème.
+
+---
+
+## 🤪 Lancer les tests (optionnel)
+
+```bash
+yarn test
+```
+
+---
+
+## 📣 Docker
+
+### Build et run
+
+```bash
+docker build -t taskmaster-pro .
+docker run -p 4173:4173 taskmaster-pro
+```
+
+### Fichier `.dockerignore`
+
+```dockerignore
+node_modules
+dist
+.git
+.env*
+```
+
+---
+
+## ⚙️ CI/CD (GitHub Actions)
+
+Le pipeline CI se trouve dans :
+
+```
+.github/workflows/ci.yml
+```
+
+Ce workflow effectue :
+
+* L’installation (`yarn install`)
+* Le build (`yarn build`)
+* Les tests (`yarn test` si existants)
+
+Variables fictives utilisées :
+
+```env
+API_URL=https://fakeapi.taskmaster.com
+DATABASE_URL=postgres://user:password@localhost:5432/taskmaster
+NODE_ENV=production
+```
+
+---
+
+## 👥 Utilisateurs fictifs
+
+```json
+[
+  { "id": 1, "name": "Alice Dupont", "role": "Développeur" },
+  { "id": 2, "name": "Jean Martin", "role": "Chef de projet" },
+  { "id": 3, "name": "Sophie Bernard", "role": "Designer UX/UI" }
+]
+```
+
+---
+
+## 📁 Environnement
+
+### .env.local (développement)
+
+```env
+VITE_API_URL=/api
+VITE_NODE_ENV=development
+```
+
+### .env.production
+
+```env
+VITE_API_URL=https://fakeapi.taskmaster.com
+VITE_NODE_ENV=production
+```
+
+---
+
+## 📌 Choix d’architecture
+
+* **MVVM** via composants + hooks + providers
+* **SOLID** appliqué à la modularisation des responsabilités
+* **YAGNI / KISS** : pas d’abstraction inutile
+* **ThemeContext** global pour centraliser la logique de thématisation
+* **Fake API** isolée dans `/mirage/` pour remplacement futur simple
+

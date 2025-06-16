@@ -1,7 +1,6 @@
-// src/features/tasks/services/task.services.ts
 import type { Task } from '../tasks/models/task.model'
 
-const API = '/api'; // 👈 hardcodé pour tester Mirage
+const API = '/api';
 const URL = `${API}/tasks`
 
 async function toJSON<R>(p: Promise<Response>): Promise<R> {
@@ -12,7 +11,7 @@ async function toJSON<R>(p: Promise<Response>): Promise<R> {
     throw err
   }
 
-  const text = await res.text() // ✅ lire UNE SEULE FOIS
+  const text = await res.text() 
   console.log('[RAW RESPONSE]', text)
 
   if (!text) return {} as R

@@ -1,5 +1,3 @@
-// src/themes/DynamicThemeProvider.tsx
-import { ReactNode } from 'react'
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { useTheme } from '@/context/useTheme'
@@ -9,7 +7,7 @@ const materialTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#1e40af', // bleu foncé
+      main: '#1e40af',
     },
     background: {
       default: '#f5f5f5',
